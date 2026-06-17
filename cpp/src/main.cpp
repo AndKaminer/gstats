@@ -1,8 +1,10 @@
 #include <CLI/CLI.hpp>
 #include <filesystem>
+#include <fstream>
 #include <iostream>
-#include "CLI/CLI.hpp"
+
 #include "repository.hpp"
+#include "index.hpp"
 
 int main(int argc, char** argv) {
   std::filesystem::path repo_base_directory = std::filesystem::current_path();
@@ -44,7 +46,10 @@ int main(int argc, char** argv) {
 
   CLI11_PARSE(app, argc, argv);
 
-  std::cout << repo_base_directory << std::endl;
+  std::ifstream file(repo_base_directory / ".git" / "index", std::ios::binary);
+  git_index::header_t header {git_index::read_header(file)};
+
+  std::cout << header.type_id << std::endl << header.version << std::endl << header.num_entries << std::endl;
 
   return 0;
 }
