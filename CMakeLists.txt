@@ -6,7 +6,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+file(GLOB SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/cpp/src/*.cpp")
+
 add_subdirectory(cpp/CLI11)
-add_executable(gstats cpp/src/main.cpp)
+add_executable(gstats ${SOURCES})
 target_link_libraries(gstats PUBLIC CLI11::CLI11)
 target_include_directories(gstats PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/cpp/headers)

@@ -46,10 +46,6 @@ int main(int argc, char** argv) {
 
   CLI11_PARSE(app, argc, argv);
 
-  std::ifstream file(repo_base_directory / ".git" / "index", std::ios::binary);
-  git_index::header_t header {git_index::read_header(file)};
-
-  std::cout << header.type_id << std::endl << header.version << std::endl << header.num_entries << std::endl;
-
+  git_index::read_index_file(repo_base_directory / ".git" / "index");
   return 0;
 }
