@@ -17,10 +17,10 @@ struct header_t {
 };
 
 struct index_entry_t {
-  char path;
-  char obj_type;
-  int file_size;
-  char checksum;
+  fs::path path {};
+  char obj_type {0};
+  int file_size {0};
+  char checksum {0};
 };
 
 struct index_data_t {
@@ -34,8 +34,8 @@ struct index_data_t {
 inline header_t read_header(std::ifstream& file) {
   header_t to_return {};
   file.read(to_return.type_id, 4);
-  to_return.version = util::read_big_endian_number(file);
-  to_return.num_entries = util::read_big_endian_number(file);
+  to_return.version = util::read_big_endian_number32(file);
+  to_return.num_entries = util::read_big_endian_number32(file);
   
   return to_return;
 }
