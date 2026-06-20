@@ -1,13 +1,11 @@
 #include <CLI/CLI.hpp>
 #include <filesystem>
-#include <fstream>
-#include <iostream>
 
 #include "repository.hpp"
 #include "index.hpp"
 
 int main(int argc, char** argv) {
-  std::filesystem::path repo_base_directory = std::filesystem::current_path();
+  std::filesystem::path repo_base_directory {std::filesystem::current_path()};
 
   CLI::App app{"A git statistics aggregator"};
   app.require_subcommand();
