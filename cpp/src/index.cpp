@@ -24,6 +24,13 @@ index_data_t read_index_file(fs::path indexpath) {
     file.ignore(20); // read the sha
     
     uint16_t flags {util::read_big_endian_number16(file)};
+    uint16_t name_length_mask {0b0000'1111'1111'1111};
+    uint16_t name_length {static_cast<uint16_t>(flags & name_length_mask)};
+
+    std::string file_name_s;
+    file_name_s.reserve(name_length);
+    file.read(file_name_s.data(), name_length);
+    entry.path = static_cast<fs::path>(file_name_s);
 
     to_return.entries.push_back(entry);
   }
