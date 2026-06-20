@@ -26,9 +26,7 @@ struct index_data_t {
   std::vector<index_entry_t> entries {};
   std::uint32_t version {0};
   std::uint32_t num_entries {0};
-  char* extension_data {nullptr};
-  char checksum[20] {0};
-    };
+};
 
 inline header_t read_header(std::ifstream& file) {
   header_t to_return {};

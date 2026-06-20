@@ -14,8 +14,6 @@ index_data_t read_index_file(fs::path indexpath) {
   to_return.version = header.version;
   to_return.num_entries = header.num_entries;
 
-  std::cout << std::string_view{header.type_id, 4} << std::endl << to_return.version << std::endl << to_return.num_entries << std::endl;
-
   for (auto entry_num {0}; entry_num < to_return.num_entries; ++entry_num) {
     index_entry_t entry {};
     long starting_offset {file.tellg()};
@@ -41,7 +39,6 @@ index_data_t read_index_file(fs::path indexpath) {
     long padding_needed {8 - entry_size % 8};
     file.ignore(padding_needed);
 
-    std::cout << entry.path << " " << entry.file_size << " " << entry.obj_type << std::endl;
   }
   
   return to_return;

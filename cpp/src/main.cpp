@@ -24,6 +24,11 @@ int main(int argc, char** argv) {
   auto* count_files {app.add_subcommand(
     "count-files",
     "Count the number of files in the project."
+  )->callback(
+    [&repo_base_directory]() {
+      git_index::index_data_t index_file {git_index::read_index_file(repo_base_directory / ".git" / "index")};
+      std::cout << index_file.num_entries << std::endl;
+    }
   )};
   auto* count_lines {app.add_subcommand(
     "count-lines",
@@ -43,7 +48,5 @@ int main(int argc, char** argv) {
   )};
 
   CLI11_PARSE(app, argc, argv);
-
-  git_index::read_index_file(repo_base_directory / ".git" / "index");
   return 0;
 }
