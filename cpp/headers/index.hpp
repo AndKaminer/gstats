@@ -18,9 +18,8 @@ struct header_t {
 
 struct index_entry_t {
   fs::path path {};
-  char obj_type {0};
-  int file_size {0};
-  char checksum {0};
+  uint32_t obj_type {0};
+  uint32_t file_size {0};
 };
 
 struct index_data_t {
