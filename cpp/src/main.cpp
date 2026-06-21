@@ -1,5 +1,6 @@
 #include <CLI/CLI.hpp>
 #include <filesystem>
+#include <stdexcept>
 
 #include "repository.hpp"
 #include "index.hpp"
@@ -26,13 +27,34 @@ int main(int argc, char** argv) {
     "Count the number of files in the project."
   )->callback(
     [&repo_base_directory]() {
-      git_index::index_data_t index_file {git_index::read_index_file(repo_base_directory / ".git" / "index")};
-      std::cout << index_file.num_entries << std::endl;
+      git_index::index_data_t index_data {git_index::read_index_file(repo_base_directory / ".git" / "index")};
+      std::cout << index_data.num_entries << std::endl;
     }
   )};
   auto* count_lines {app.add_subcommand(
     "count-lines",
     "Count the lines of code in the project, aggregated in various ways."
+  )->callback(
+    [&repo_base_directory]() {
+      git_index::index_data_t index_data {git_index::read_index_file(repo_base_directory / ".git" / "index")};
+      std::unordered_map<std::string, int> linecounts {};
+      for (const auto& entry : index_data.entries) {
+        std::filesystem::path filepath {repo_base_directory / entry.path};
+        std::fstream fileobj {filepath};
+        if (!fileobj.is_open()) {
+          throw std::runtime_error("Error opening file.");
+        }
+        std::string line {};
+        while (std::getline(fileobj, line)) {
+          linecounts[entry.path.extension().string()]++;
+        }
+      }
+      for (const auto& [key, value] : linecounts) {
+        if (key != "") {
+          std::cout << key << ": " << value << std::endl;
+        }
+      }
+    }
   )};
   auto* repository_size {app.add_subcommand(
     "repo-size",
