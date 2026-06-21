@@ -37,6 +37,15 @@ int main(int argc, char** argv) {
   auto* repository_size {app.add_subcommand(
     "repo-size",
     "Calculate the size of the repository."
+  )->callback(
+    [&repo_base_directory]() {
+      git_index::index_data_t index_data {git_index::read_index_file(repo_base_directory / ".git" / "index")};
+      long total_size {0};
+      for (const auto& entry : index_data.entries) {
+        total_size += entry.file_size;
+      }
+      std::cout << total_size << std::endl;
+    }
   )};
   auto* show_files {app.add_subcommand(
     "show-files",
